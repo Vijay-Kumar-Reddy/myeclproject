@@ -1,0 +1,654 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Gentleman's Reserve - Premium Liquor, Bar & Cigar Lounge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        .hero-gradient {
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)),
+                url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=1920&h=1080&fit=crop&crop=center') center/cover no-repeat,
+                linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%, #0a0a0a 100%);
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+        }
+        .hero-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(218, 165, 32, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(218, 165, 32, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(218, 165, 32, 0.1) 0%, transparent 50%);
+            animation: float 8s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(2deg); }
+        }
+        .opening-soon {
+            background: linear-gradient(45deg, #DAA520, #FFD700, #DAA520);
+            background-size: 200% 200%;
+            animation: shimmer 3s ease-in-out infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        @keyframes shimmer {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 35px -5px rgba(0, 0, 0, 0.3);
+        }
+        .liquor-bg {
+            background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+            position: relative;
+        }
+        .liquor-bg::before {
+            content: '🥃';
+            position: absolute;
+            font-size: 2.5rem;
+            opacity: 0.3;
+            top: 10%;
+            right: 10%;
+            animation: bounce 4s infinite;
+        }
+        .bar-bg {
+            background: linear-gradient(135deg, #2F4F4F 0%, #708090 100%);
+            position: relative;
+        }
+        .bar-bg::before {
+            content: '🍸';
+            position: absolute;
+            font-size: 2.5rem;
+            opacity: 0.3;
+            top: 15%;
+            left: 15%;
+            animation: bounce 4s infinite 0.5s;
+        }
+        .cigar-bg {
+            background: linear-gradient(135deg, #654321 0%, #8B4513 100%);
+            position: relative;
+        }
+        .cigar-bg::before {
+            content: '🚬';
+            position: absolute;
+            font-size: 2.5rem;
+            opacity: 0.3;
+            top: 20%;
+            right: 20%;
+            animation: bounce 4s infinite 1s;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-15px); }
+            60% { transform: translateY(-8px); }
+        }
+        .about-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
+            position: relative;
+        }
+        .about-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(218, 165, 32, 0.08) 0%, transparent 25%),
+                radial-gradient(circle at 90% 80%, rgba(218, 165, 32, 0.12) 0%, transparent 25%);
+        }
+        .contact-pattern {
+            background-image: 
+                radial-gradient(circle at 25px 25px, rgba(218, 165, 32, 0.1) 2px, transparent 2px),
+                radial-gradient(circle at 75px 75px, rgba(218, 165, 32, 0.1) 2px, transparent 2px);
+            background-size: 100px 100px;
+            background-position: 0 0, 50px 50px;
+        }
+        .footer-gradient {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+        }
+        .notification {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 50;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            background-color: #DAA520;
+            color: #000;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            font-weight: bold;
+        }
+        .notification.show {
+            transform: translateX(0);
+        }
+        .coming-soon-badge {
+            background: linear-gradient(45deg, #DAA520, #FFD700);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 font-sans">
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <span id="notification-message"></span>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-gray-900 shadow-2xl sticky top-0 z-50 border-b border-yellow-600/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex items-center space-x-3">
+                        <img 
+                            src={% static "images/logo.png" %} 
+                            alt="ECL" 
+                            class="h-10 w-auto"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                        />
+                        <!-- Fallback SVG logo (hidden by default, shown if PNG fails to load) -->
+                        <div class="relative" style="display: none;">
+                            <svg width="40" height="40" viewBox="0 0 40 40" class="text-yellow-500">
+                                <defs>
+                                    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+                                        <stop offset="50%" style="stop-color:#DAA520;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#B8860B;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <circle cx="20" cy="20" r="18" fill="none" stroke="url(#goldGradient)" stroke-width="2"/>
+                                <circle cx="20" cy="20" r="12" fill="none" stroke="url(#goldGradient)" stroke-width="1" opacity="0.6"/>
+                                <path d="M12 25 L12 28 Q12 30 14 30 L26 30 Q28 30 28 28 L28 25 L26 15 L14 15 Z" fill="url(#goldGradient)" opacity="0.8"/>
+                                <path d="M14 16 L15 16 L15 25 L14 25 Z" fill="#FFD700" opacity="0.4"/>
+                                <text x="20" y="12" text-anchor="middle" fill="url(#goldGradient)" font-size="8" font-family="serif">GR</text>
+                            </svg>
+                        </div>
+                        <div class="text-2xl font-bold text-yellow-500">ECL</div>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <button onclick="scrollToSection('home')" class="text-gray-300 hover:text-yellow-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</button>
+                        <button onclick="scrollToSection('offerings')" class="text-gray-300 hover:text-yellow-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">Our Offerings</button>
+                        <button onclick="scrollToSection('about')" class="text-gray-300 hover:text-yellow-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">About</button>
+                        <button onclick="scrollToSection('contact')" class="text-gray-300 hover:text-yellow-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">Contact/Hiring</button>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button onclick="toggleMobileMenu()" class="text-gray-300 hover:text-yellow-500 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-900 border-t border-yellow-600/30">
+                <button onclick="scrollToSection('home')" class="text-gray-300 hover:text-yellow-500 block px-3 py-2 rounded-md text-base font-medium w-full text-left">Home</button>
+                <button onclick="scrollToSection('offerings')" class="text-gray-300 hover:text-yellow-500 block px-3 py-2 rounded-md text-base font-medium w-full text-left">Our Offerings</button>
+                <button onclick="scrollToSection('about')" class="text-gray-300 hover:text-yellow-500 block px-3 py-2 rounded-md text-base font-medium w-full text-left">About</button>
+                <button onclick="scrollToSection('contact')" class="text-gray-300 hover:text-yellow-500 block px-3 py-2 rounded-md text-base font-medium w-full text-left">Contact</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-gradient text-white py-20 flex items-center justify-center relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="coming-soon-badge inline-block px-6 py-2 rounded-full text-black font-bold text-lg mb-6">
+                🎉 OPENING SOON 🎉
+            </div>
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">EILAND CIGAR LOUNGE & LIQUOR STORE</h1>
+            <p class="text-xl md:text-2xl mb-4 text-gray-300">Premium Liquor Store • Sophisticated Bar • Cigar Lounge</p>
+            <p class="text-lg md:text-xl mb-8 text-yellow-400 opening-soon font-semibold">Where Tradition Meets Excellence</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="scrollToSection('offerings')" class="bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-3 px-8 rounded-lg transition-colors shadow-lg">
+                    Explore Our Offerings
+                </button>
+                {% comment %} <button onclick="scrollToSection('contact')" class="border-2 border-yellow-600 text-yellow-500 hover:bg-yellow-600 hover:text-black font-bold py-3 px-8 rounded-lg transition-colors">
+                    Get Notified
+                </button> {% endcomment %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Offerings Section -->
+    <section id="offerings" class="py-16 bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-yellow-500 mb-4">Our Premium Offerings</h2>
+                <p class="text-lg text-gray-300">Experience the finest in liquor, cocktails, and cigars</p>
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button onclick="filterOfferings('all')" class="filter-btn active px-6 py-2 rounded-full font-medium transition-colors bg-yellow-600 text-black shadow-lg">All</button>
+                <button onclick="filterOfferings('liquor')" class="filter-btn px-6 py-2 rounded-full font-medium transition-colors bg-gray-700 text-gray-300 hover:bg-yellow-600 hover:text-black border border-gray-600">Premium Liquor</button>
+                <button onclick="filterOfferings('bar')" class="filter-btn px-6 py-2 rounded-full font-medium transition-colors bg-gray-700 text-gray-300 hover:bg-yellow-600 hover:text-black border border-gray-600">Cocktail Bar</button>
+                <button onclick="filterOfferings('cigar')" class="filter-btn px-6 py-2 rounded-full font-medium transition-colors bg-gray-700 text-gray-300 hover:bg-yellow-600 hover:text-black border border-gray-600">Cigar Lounge</button>
+            </div>
+
+            <div id="offerings-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Offerings will be dynamically inserted here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 about-section">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-yellow-500 mb-6">Eiland Cigar Lounge & Liquor</h2>
+                    <p class="text-lg text-gray-300 mb-6">
+                        The ECL Eiland Cigar & Liquor will be the city's premier destination 
+                        for discerning gentlemen and ladies who appreciate the finer things in life.
+                    </p>
+                    <p class="text-lg text-gray-300 mb-8">
+                        Our establishment combines three distinct experiences under one roof: a curated premium liquor store, 
+                        an elegant cocktail bar, and a sophisticated cigar lounge with proper ventilation and comfortable seating.
+                    </p>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-yellow-500 mb-2">500+</div>
+                            <div class="text-gray-300">Premium Spirits</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-yellow-500 mb-2">50+</div>
+                            <div class="text-gray-300">Cigar Varieties</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-900 rounded-lg shadow-2xl p-8 border border-gray-700">
+                    <h3 class="text-2xl font-bold text-yellow-500 mb-6">What Makes Us Special?</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <span class="text-2xl mr-4">🏆</span>
+                            <div>
+                                <h4 class="font-semibold text-yellow-500">Curated Selection</h4>
+                                <p class="text-gray-300">Hand-picked premium spirits and rare finds</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-2xl mr-4">🍸</span>
+                            <div>
+                                <h4 class="font-semibold text-yellow-500">Master Mixologists</h4>
+                                <p class="text-gray-300">Expertly crafted cocktails and classic drinks</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-2xl mr-4">🚬</span>
+                            <div>
+                                <h4 class="font-semibold text-yellow-500">Premium Cigars</h4>
+                                <p class="text-gray-300">Climate-controlled humidor with finest selections</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-2xl mr-4">🎩</span>
+                            <div>
+                                <h4 class="font-semibold text-yellow-500">Gentleman's Atmosphere</h4>
+                                <p class="text-gray-300">Sophisticated ambiance for the discerning patron</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-gray-800 contact-pattern">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-yellow-500 mb-4">Stay Informed</h2>
+                <p class="text-lg text-gray-300">Be the first to know when we open our doors</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="space-y-8">
+                    <div>
+                        <h3 class="text-2xl font-bold text-yellow-500 mb-6">Location & Details</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <span class="text-2xl mr-4">📍</span>
+                                <div>
+                                    <h4 class="font-semibold text-yellow-500">Address</h4>
+                                    <p class="text-gray-300">37130 Eiland Blvd<br/>Zephyrhills<br/>Florida 33542</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-2xl mr-4">📞</span>
+                                <div>
+                                    <h4 class="font-semibold text-yellow-500">Phone</h4>
+                                    <p class="text-gray-300">(813) 355-3859</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-2xl mr-4">✉️</span>
+                                <div>
+                                    <h4 class="font-semibold text-yellow-500">Email</h4>
+                                    <p class="text-gray-300">eclcigars@gmail.com</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-bold text-yellow-500 mb-4">Planned Hours</h3>
+                        <div class="space-y-2 text-gray-300">
+                            <div class="flex justify-between">
+                                <span>Monday - Thursday:</span>
+                                <span>10:00 AM - 12:00 AM</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Friday - Saturday:</span>
+                                <span>10:00 AM - 2:00 AM</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Sunday:</span>
+                                <span>6:00 PM - 11:00 PM</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% comment %} <div class="bg-gray-900 rounded-lg p-8 border border-gray-700">
+                    <h3 class="text-2xl font-bold text-yellow-500 mb-6">Join Our VIP List</h3>
+                    <form onsubmit="handleFormSubmit(event)" class="space-y-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-yellow-500 mb-2">Name</label>
+                            <input 
+                                type="text" 
+                                id="name" 
+                                name="name" 
+                                required 
+                                class="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-600 focus:border-transparent"
+                            />
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-yellow-500 mb-2">Email</label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                required 
+                                class="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-600 focus:border-transparent"
+                            />
+                        </div>
+                        <div>
+                            <label for="interest" class="block text-sm font-medium text-yellow-500 mb-2">Primary Interest</label>
+                            <select 
+                                id="interest" 
+                                name="interest" 
+                                class="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-600 focus:border-transparent"
+                            >
+                                <option>Premium Liquor Store</option>
+                                <option>Cocktail Bar</option>
+                                <option>Cigar Lounge</option>
+                                <option>All Experiences</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-yellow-500 mb-2">Message (Optional)</label>
+                            <textarea 
+                                id="message" 
+                                name="message" 
+                                rows="4" 
+                                class="w-full px-4 py-2 border border-gray-600 bg-gray-800 text-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-600 focus:border-transparent"
+                                placeholder="Let us know what you're most excited about..."
+                            ></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-3 px-6 rounded-lg transition-colors">
+                            Join VIP List
+                        </button>
+                    </form>
+                </div> {% endcomment %}
+                <div class="bg-gray-900 rounded-lg p-8 border border-gray-700 text-center">
+                    <h3 class="text-3xl font-bold text-yellow-500 mb-6">We're Hiring!</h3>
+                    <p class="text-lg text-gray-300 mb-6">
+                        Join our amazing team — now hiring for 
+                        <span class="text-yellow-500 font-semibold">Bartender, Waiter, and Cashier</span>.
+                    </p>
+                    <img src={% static 'images/hiring_staff.png' %}
+                        alt="Team smiling at bar" 
+                        class="rounded-lg shadow-2xl mx-auto mb-6 max-w-full h-auto border border-gray-700" />
+                    <p class="text-gray-400">
+                        Apply by sending you resume to
+                        <span class="text-yellow-500 font-semibold">eclcigars@gmail.com</span>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer-gradient text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <img 
+                            src="YOUR_LOGO_URL_HERE.png" 
+                            alt="The Gentleman's Reserve Logo" 
+                            class="h-8 w-auto"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                        />
+                        <!-- Fallback SVG logo for footer -->
+                        <div class="relative" style="display: none;">
+                            <svg width="32" height="32" viewBox="0 0 40 40" class="text-yellow-500">
+                                <defs>
+                                    <linearGradient id="goldGradientFooter" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+                                        <stop offset="50%" style="stop-color:#DAA520;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#B8860B;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <circle cx="20" cy="20" r="18" fill="none" stroke="url(#goldGradientFooter)" stroke-width="2"/>
+                                <circle cx="20" cy="20" r="12" fill="none" stroke="url(#goldGradientFooter)" stroke-width="1" opacity="0.6"/>
+                                <path d="M12 25 L12 28 Q12 30 14 30 L26 30 Q28 30 28 28 L28 25 L26 15 L14 15 Z" fill="url(#goldGradientFooter)" opacity="0.8"/>
+                                <path d="M14 16 L15 16 L15 25 L14 25 Z" fill="#FFD700" opacity="0.4"/>
+                                <text x="20" y="12" text-anchor="middle" fill="url(#goldGradientFooter)" font-size="8" font-family="serif">GR</text>
+                            </svg>
+                        </div>
+                        <div class="text-2xl font-bold text-yellow-500">The Gentleman's Reserve</div>
+                    </div>
+                    <p class="text-gray-400">Opening soon - Your premier destination for fine spirits, craft cocktails, and premium cigars.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-yellow-500">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><button onclick="scrollToSection('home')" class="hover:text-yellow-500 transition-colors">Home</button></li>
+                        <li><button onclick="scrollToSection('offerings')" class="hover:text-yellow-500 transition-colors">Our Offerings</button></li>
+                        <li><button onclick="scrollToSection('about')" class="hover:text-yellow-500 transition-colors">About</button></li>
+                        <li><button onclick="scrollToSection('contact')" class="hover:text-yellow-500 transition-colors">Contact</button></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-yellow-500">Experiences</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-yellow-500 transition-colors">Premium Liquor Store</a></li>
+                        <li><a href="#" class="hover:text-yellow-500 transition-colors">Cocktail Bar</a></li>
+                        <li><a href="#" class="hover:text-yellow-500 transition-colors">Cigar Lounge</a></li>
+                        <li><a href="#" class="hover:text-yellow-500 transition-colors">Private Events</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-yellow-500">Follow Our Journey</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-yellow-500 transition-colors text-2xl">📘</a>
+                        <a href="#" class="text-gray-400 hover:text-yellow-500 transition-colors text-2xl">📷</a>
+                        <a href="#" class="text-gray-400 hover:text-yellow-500 transition-colors text-2xl">🐦</a>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-gray-400 text-sm">📞 (813) 355-3859</p>
+                        <p class="text-gray-400 text-sm">✉️ info@gentlemansreserve.com</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 The Gentleman's Reserve. Opening Soon. Please enjoy responsibly.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Offerings data
+        const offerings = [
+            { id: 1, name: "Rare Whiskey Collection", category: "liquor", description: "Exclusive single malts and limited editions from around the world", image: "https://images.unsplash.com/photo-1527281400683-1aae777175f8?w=400&h=400&fit=crop&crop=center" },
+            { id: 2, name: "Premium Bourbon Selection", category: "liquor", description: "Kentucky's finest bourbons and small-batch releases", image: "https://images.unsplash.com/photo-1569529465841-dfecdab7503b?w=400&h=400&fit=crop&crop=center" },
+            { id: 3, name: "Artisan Gin & Vodka", category: "liquor", description: "Craft distilled spirits with unique botanical profiles", image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=400&h=400&fit=crop&crop=center" },
+            { id: 4, name: "Classic Cocktails", category: "bar", description: "Timeless recipes crafted with precision and premium ingredients", image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=400&h=400&fit=crop&crop=center" },
+            { id: 5, name: "Signature Mixology", category: "bar", description: "House-created cocktails featuring unique flavor combinations", image: "https://images.unsplash.com/photo-1536935338788-846bb9981813?w=400&h=400&fit=crop&crop=center" },
+            { id: 6, name: "Wine & Champagne Bar", category: "bar", description: "Curated selection of fine wines and premium champagnes", image: "https://images.unsplash.com/photo-1547595628-c61a29f496f0?w=400&h=400&fit=crop&crop=center" },
+            { id: 7, name: "Cuban Cigars", category: "cigar", description: "Authentic Havana cigars stored in perfect conditions", image: "https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=400&h=400&fit=crop&crop=center" },
+            { id: 8, name: "Premium Cigar Selection", category: "cigar", description: "Hand-rolled cigars from renowned tobacco regions", image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop&crop=center" },
+            { id: 9, name: "Cigar Accessories", category: "cigar", description: "Professional cutters, lighters, and humidors", image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop&crop=center" }
+        ];
+
+        let currentFilter = 'all';
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderOfferings(offerings);
+        });
+
+        // Smooth scrolling function
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        // Filter offerings
+        function filterOfferings(category) {
+            currentFilter = category;
+            
+            // Update filter button styles
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-yellow-600', 'text-black', 'shadow-lg');
+                btn.classList.add('bg-gray-700', 'text-gray-300', 'border', 'border-gray-600');
+            });
+            
+            event.target.classList.add('active', 'bg-yellow-600', 'text-black', 'shadow-lg');
+            event.target.classList.remove('bg-gray-700', 'text-gray-300', 'border', 'border-gray-600');
+
+            // Filter and render offerings
+            const filteredOfferings = category === 'all' 
+                ? offerings 
+                : offerings.filter(offering => offering.category === category);
+            
+            renderOfferings(filteredOfferings);
+        }
+
+        // Render offerings
+        function renderOfferings(offeringsToRender) {
+            const grid = document.getElementById('offerings-grid');
+            grid.innerHTML = '';
+
+            offeringsToRender.forEach(offering => {
+                const offeringCard = document.createElement('div');
+                offeringCard.className = `offering-card ${offering.category}-bg card-hover bg-gray-900 rounded-lg shadow-2xl overflow-hidden border border-gray-700`;
+                offeringCard.innerHTML = `
+                    <div class="h-48 relative overflow-hidden">
+                        <img 
+                            src="${offering.image}" 
+                            alt="${offering.name}"
+                            class="w-full h-full object-cover"
+                            onerror="this.src=''; this.alt='Image failed to load'; this.style.display='none';"
+                        />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-yellow-500 mb-2">${offering.name}</h3>
+                        <p class="text-gray-300 mb-4">${offering.description}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-medium text-yellow-600 bg-yellow-600/20 px-3 py-1 rounded-full">Coming Soon</span>
+                            <button 
+                                onclick="addToWishlist('${offering.name}')"
+                                class="wishlist-btn px-4 py-2 rounded-lg transition-colors font-semibold bg-yellow-600 hover:bg-yellow-500 text-black"
+                            >
+                                Add to Wishlist
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(offeringCard);
+            });
+        }
+
+        // Add to wishlist function
+        function addToWishlist(offeringName) {
+            const button = event.target;
+            const originalText = button.textContent;
+            
+            // Change button appearance
+            button.textContent = 'Added!';
+            button.classList.remove('bg-yellow-600', 'hover:bg-yellow-500', 'text-black');
+            button.classList.add('bg-green-600', 'text-white');
+            
+            // Show notification
+            showNotification(`${offeringName} added to your wishlist!`);
+            
+            // Reset button after 2 seconds
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.classList.remove('bg-green-600', 'text-white');
+                button.classList.add('bg-yellow-600', 'hover:bg-yellow-500', 'text-black');
+            }, 2000);
+        }
+
+        // Show notification
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const messageElement = document.getElementById('notification-message');
+            
+            messageElement.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+
+        // Handle form submission
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const name = formData.get('name');
+            
+            showNotification(`Welcome to our VIP list, ${name}! We'll notify you when we open.`);
+            event.target.reset();
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98f574f5b43acc74',t:'MTc2MDU5NTY5NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
